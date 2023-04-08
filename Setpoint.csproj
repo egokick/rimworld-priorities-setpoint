@@ -1,0 +1,81 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net472</TargetFramework>
+		<OutputType>Library</OutputType>
+		<RootNamespace>SetPointPriorities</RootNamespace>
+		<AssemblyName>SetPointPriorities</AssemblyName>
+		<UserSecretsId>4a640e8a-de86-4c67-84e0-1d7d53d979f4</UserSecretsId>
+		
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+		<OutputPath>C:\Program Files (x86)\Steam\steamapps\common\RimWorld\Mods\SetPointPriorities\Assemblies</OutputPath>
+		<PackageReleaseNotes>
+		</PackageReleaseNotes>
+		<Configurations>Debug;Release;rimworld</Configurations>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+	  <WarningLevel>0</WarningLevel>
+	  <DebugType>none</DebugType>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='rimworld|AnyCPU'">
+	  <WarningLevel>0</WarningLevel>
+	  <DebugType>none</DebugType>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+	  <WarningLevel>0</WarningLevel>
+	  <DebugType>none</DebugType>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Reference Include="0Harmony">
+	    <HintPath>dependencies\0Harmony.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="Assembly-CSharp">
+	    <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\Assembly-CSharp.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="UnityEngine">
+	    <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="UnityEngine.CoreModule">
+	    <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.CoreModule.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="UnityEngine.IMGUIModule">
+	    <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.IMGUIModule.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="UnityEngine.TextRenderingModule">
+	    <HintPath>..\..\..\Program Files (x86)\Steam\steamapps\common\RimWorld\RimWorldWin64_Data\Managed\UnityEngine.TextRenderingModule.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Compile Update="Properties\Resources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>Resources.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <EmbeddedResource Update="Properties\Resources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Update="About\About.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Defs\MainButtons.xml">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Textures\UI\Buttons\SetPointManager.png">
+	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+</Project>

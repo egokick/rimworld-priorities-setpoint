@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Defs>
+  <MainButtonDef>
+    <defName>OpenSetPointDialog</defName>
+    <label>Set Point Manager</label>
+    <order>150</order>
+    <iconPath>UI/Buttons/SetPointManager</iconPath>
+    <validWithoutMap>false</validWithoutMap>
+    <workerClass>SetPointPriorities.SetPointMainButtonWorker</workerClass>
+  </MainButtonDef>
+</Defs>

@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.33516.290
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Setpoint", "Setpoint.csproj", "{F79669C3-15AB-4389-8BA6-289BFF57830D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+		rimworld|Any CPU = rimworld|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F79669C3-15AB-4389-8BA6-289BFF57830D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F79669C3-15AB-4389-8BA6-289BFF57830D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F79669C3-15AB-4389-8BA6-289BFF57830D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F79669C3-15AB-4389-8BA6-289BFF57830D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F79669C3-15AB-4389-8BA6-289BFF57830D}.rimworld|Any CPU.ActiveCfg = rimworld|Any CPU
+		{F79669C3-15AB-4389-8BA6-289BFF57830D}.rimworld|Any CPU.Build.0 = rimworld|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {30D4F713-F48F-4BD1-9944-FF1525E6C970}
+	EndGlobalSection
+EndGlobal

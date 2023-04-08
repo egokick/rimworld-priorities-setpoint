@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>Set Point Priorities</name>
+	<author>egokick</author>
+	<packageId>egokick.SetPoint.SetPointPriorities</packageId>
+	<description>
+		This mod adds a user interface that allows you to define "set points" to control the priorities of each character in RimWorld.
+		Set points can be activated or deactivated based on resource thresholds, allowing you to automatically adjust work priorities as needed.
+	</description>
+	<supportedVersions>
+		<li>1.4</li>
+	</supportedVersions>
+</ModMetaData>
