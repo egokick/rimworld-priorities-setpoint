@@ -58,19 +58,49 @@ public class SetPointWindow : Window
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
 
+
+            listingStandard.Gap(10);
+            listingStandard.Label("Active Set Points");
+            listingStandard.Gap(10);
+
+            // Display active setpoints
+            foreach (SetPoint setPoint in SetPointManager.Instance.ActiveSetPoints)
+            {
+                listingStandard.Label($"Pawn: {setPoint.Pawn.Name}, Work Type: {setPoint.WorkType}, Resource: {setPoint.Resource}, Active: {setPoint.Enabled}");
+                Rect buttonRect = listingStandard.GetRect(30);
+
+                if (Widgets.ButtonText(new Rect(buttonRect.x, buttonRect.y, 60, buttonRect.height), setPoint.Enabled ? "Disable" : "Enable"))
+                {
+                    if (setPoint.Enabled)
+                    {
+                        setPoint.Deactivate();
+                    }
+                    else
+                    {
+                        setPoint.Activate();
+                    }
+                }
+
+                if (Widgets.ButtonText(new Rect(buttonRect.x + 70, buttonRect.y, 60, buttonRect.height), "Delete"))
+                {
+                    SetPointManager.Instance.RemoveSetPoint(setPoint);
+                }
+            }
+
             // Add UI elements for creating a SetPoint
             listingStandard.Label("Trigger Threshold:");
             string triggerThresholdStr = triggerThreshold.ToString();            
             int triggerThresholdValue = triggerThreshold;
-            listingStandard.TextFieldNumeric(ref triggerThresholdValue, ref triggerThresholdStr, 0, 100);
+            triggerThreshold = (int)listingStandard.Slider(triggerThreshold, 0, 1000);
+            listingStandard.TextFieldNumeric(ref triggerThresholdValue, ref triggerThresholdStr, 0, 1000);
             triggerThreshold = int.TryParse(triggerThresholdStr, out int parsedTriggerThreshold) ? parsedTriggerThreshold : triggerThreshold;
 
 
             listingStandard.Label("Disable Threshold:");
             string disableThesholdStr = disableThreshold.ToString();
             int disableThresholdValue = disableThreshold;
-            disableThreshold = (int)listingStandard.Slider(disableThreshold, 0, 100);
-            listingStandard.TextFieldNumeric(ref disableThresholdValue, ref disableThesholdStr, 0, 100);
+            disableThreshold = (int)listingStandard.Slider(disableThreshold, 0, 1000);
+            listingStandard.TextFieldNumeric(ref disableThresholdValue, ref disableThesholdStr, 0, 1000);
             disableThreshold = int.TryParse(disableThesholdStr, out int parsedDisableThreshold) ? parsedDisableThreshold : disableThreshold;
 
             listingStandard.Label("Select Pawn:");
@@ -156,12 +186,6 @@ public class SetPointWindow : Window
                     Messages.Message("You must select a pawn, work type, and resource before creating a SetPoint.", MessageTypeDefOf.RejectInput, false);
                 }
                 this.Close();
-            }
-
-            if (listingStandard.ButtonText("Apply"))
-            {
-                // Apply the settings and close the window
-                this.Close();
 
                 if (newSetPoint is null)
                 {
@@ -172,6 +196,21 @@ public class SetPointWindow : Window
                     Messages.Message("SetPoint created: " + newSetPoint.WorkType.labelShort, MessageTypeDefOf.TaskCompletion, false);
                 }
             }
+
+            //if (listingStandard.ButtonText("Apply"))
+            //{
+            //    // Apply the settings and close the window
+            //    this.Close();
+
+            //    if (newSetPoint is null)
+            //    {
+            //        Messages.Message("SetPoint was null... nothing happened", MessageTypeDefOf.RejectInput);
+            //    }
+            //    else
+            //    {
+            //        Messages.Message("SetPoint created: " + newSetPoint.WorkType.labelShort, MessageTypeDefOf.TaskCompletion, false);
+            //    }
+            //}
             listingStandard.End();
             
         }

@@ -4,11 +4,15 @@ using System;
 using System.Collections.Generic;
 using Verse;
 
-public class SetPointManager
+public class SetPointManager : IExposable
 {
+    public void ExposeData()
+    {
+        Scribe_Collections.Look(ref ActiveSetPoints, "ActiveSetPoints", LookMode.Deep);
+    }
     public static SetPointManager Instance { get; private set; }
 
-    private List<SetPoint> ActiveSetPoints = new List<SetPoint>();
+    public List<SetPoint> ActiveSetPoints = new List<SetPoint>();
 
     public SetPointManager()
     {
