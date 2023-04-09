@@ -56,37 +56,8 @@ public class SetPointWindow : Window
             }
 
             Listing_Standard listingStandard = new Listing_Standard();
-            listingStandard.Begin(inRect);
-
-
-            listingStandard.Gap(10);
-            listingStandard.Label("Active Set Points");
-            listingStandard.Gap(10);
-
-            // Display active setpoints
-            foreach (SetPoint setPoint in SetPointManager.Instance.ActiveSetPoints)
-            {
-                listingStandard.Label($"Pawn: {setPoint.Pawn.Name}, Work Type: {setPoint.WorkType}, Resource: {setPoint.Resource}, Active: {setPoint.Enabled}");
-                Rect buttonRect = listingStandard.GetRect(30);
-
-                if (Widgets.ButtonText(new Rect(buttonRect.x, buttonRect.y, 60, buttonRect.height), setPoint.Enabled ? "Disable" : "Enable"))
-                {
-                    if (setPoint.Enabled)
-                    {
-                        setPoint.Deactivate();
-                    }
-                    else
-                    {
-                        setPoint.Activate();
-                    }
-                }
-
-                if (Widgets.ButtonText(new Rect(buttonRect.x + 70, buttonRect.y, 60, buttonRect.height), "Delete"))
-                {
-                    SetPointManager.Instance.RemoveSetPoint(setPoint);
-                }
-            }
-
+            listingStandard.Begin(inRect); 
+          
             // Add UI elements for creating a SetPoint
             listingStandard.Label("Trigger Threshold:");
             string triggerThresholdStr = triggerThreshold.ToString();            
