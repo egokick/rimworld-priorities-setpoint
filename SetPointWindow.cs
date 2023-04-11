@@ -2,13 +2,16 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Xml;
 using UnityEngine;
 using Verse;
+using Random = System.Random;
 
 public class SetPointWindow : Window
-{
-    private int triggerThreshold;
-    private int disableThreshold;
+{ 
+    private int activeThreshold;
+    private int inactiveThreshold;
     private Pawn selectedPawn;
     private WorkTypeDef selectedWorkType;
     private int activePriority;
@@ -19,13 +22,42 @@ public class SetPointWindow : Window
     private List<WorkTypeDef> workTypeDefs;
     private Vector2 scrollPosition = Vector2.zero;
 
-    public override Vector2 InitialSize => new Vector2(600f, 900f);
+
+    private SetPoint newSetPoint = null;
+
+
+    public override Vector2 InitialSize => new Vector2(600f, 700f);
+
+    public SetPointWindow(SetPoint setPoint)
+    {
+        if (setPoint != null)
+        { 
+            activeThreshold = setPoint.ActiveThreshold;
+            inactiveThreshold = setPoint.InactiveThreshold;
+            selectedPawn = setPoint.Pawn;
+            selectedWorkType = setPoint.WorkType;
+            activePriority = setPoint.ActivePriority;
+            inactivePriority = setPoint.InactivePriority;
+            selectedResource = setPoint.Resource;
+            newSetPoint = setPoint;
+        }
+        else
+        {
+            newSetPoint = new SetPoint();
+        }
+
+        Setup();
+    }
 
     public SetPointWindow()
     {
+        Setup();
+    }
+
+    private void Setup()
+    {
         try
         {
-
             this.absorbInputAroundWindow = true;
             this.closeOnClickedOutside = true;
 
@@ -56,59 +88,11 @@ public class SetPointWindow : Window
             }
 
             Listing_Standard listingStandard = new Listing_Standard();
-            listingStandard.Begin(inRect); 
-          
-            // Add UI elements for creating a SetPoint
-            listingStandard.Label("Trigger Threshold:");
-            string triggerThresholdStr = triggerThreshold.ToString();            
-            int triggerThresholdValue = triggerThreshold;
-            triggerThreshold = (int)listingStandard.Slider(triggerThreshold, 0, 1000);
-            listingStandard.TextFieldNumeric(ref triggerThresholdValue, ref triggerThresholdStr, 0, 1000);
-            triggerThreshold = int.TryParse(triggerThresholdStr, out int parsedTriggerThreshold) ? parsedTriggerThreshold : triggerThreshold;
-
-
-            listingStandard.Label("Disable Threshold:");
-            string disableThesholdStr = disableThreshold.ToString();
-            int disableThresholdValue = disableThreshold;
-            disableThreshold = (int)listingStandard.Slider(disableThreshold, 0, 1000);
-            listingStandard.TextFieldNumeric(ref disableThresholdValue, ref disableThesholdStr, 0, 1000);
-            disableThreshold = int.TryParse(disableThesholdStr, out int parsedDisableThreshold) ? parsedDisableThreshold : disableThreshold;
-
-            listingStandard.Label("Select Pawn:");
-            if (Find.CurrentMap != null)
-            {
-                var pawns = Find.CurrentMap.mapPawns.FreeColonists;
-                if (listingStandard.ButtonText(selectedPawn != null ? selectedPawn.Name.ToStringFull : "No pawn selected"))
-                {
-                    List<FloatMenuOption> options = new List<FloatMenuOption>();
-                    foreach (Pawn pawn in pawns)
-                    {
-                        options.Add(new FloatMenuOption(pawn.Name.ToStringFull, () => { selectedPawn = pawn; }));
-                    }
-                    Find.WindowStack.Add(new FloatMenu(options));
-                }
-            }
-
-            listingStandard.Label("Select Work Type:"); 
-            if (listingStandard.ButtonText(!string.IsNullOrEmpty(selectedWorkType?.defName) ? selectedWorkType.defName : "No work type selected"))
-            {
-                List<FloatMenuOption> options = new List<FloatMenuOption>();
-                foreach (WorkTypeDef workTypeDef in workTypeDefs)
-                {
-                    options.Add(new FloatMenuOption(workTypeDef.defName, () => { selectedWorkType = workTypeDef; }));
-                }
-                Find.WindowStack.Add(new FloatMenu(options));
-            }
-
-            listingStandard.Label("Active Priority:");
-            DrawActivePriorityBox(listingStandard.GetRect(30));
-
-            listingStandard.Label("Inactive Priority:");            
-            DrawInactivePriorityBox(listingStandard.GetRect(30));
+            listingStandard.Begin(inRect);
 
             listingStandard.Label("Select Resource:");
-            Rect textFieldRect = listingStandard.GetRect(30);
-            resourceSearchText = Widgets.TextField(textFieldRect, resourceSearchText);
+            Rect textFieldResource = listingStandard.GetRect(30);
+            resourceSearchText = Widgets.TextField(textFieldResource, resourceSearchText);
 
             // Filter resources based on search text
             List<ThingDef> visibleResources = resources.Where(resource => string.IsNullOrEmpty(resourceSearchText) || resource.label.IndexOf(resourceSearchText, StringComparison.OrdinalIgnoreCase) >= 0).ToList();
@@ -136,13 +120,61 @@ public class SetPointWindow : Window
             }
             Widgets.EndScrollView();
 
-            SetPoint newSetPoint = null;
+            activeThreshold = SliderWithTextField("Active When Resource Drops Below", activeThreshold, 0, 2000, 600, 60, listingStandard);
+            inactiveThreshold = SliderWithTextField("Inactive When Resource Rises Above", inactiveThreshold, 0, 2000, 600, 60, listingStandard);
 
-            if (listingStandard.ButtonText("Create SetPoint"))
+            listingStandard.Label("Select Pawn:");
+            if (Find.CurrentMap != null)
+            {
+                var pawns = Find.CurrentMap.mapPawns.FreeColonists;
+                if (listingStandard.ButtonText(selectedPawn != null ? selectedPawn.Name.ToStringFull : "No pawn selected"))
+                {
+                    List<FloatMenuOption> options = new List<FloatMenuOption>();
+                    foreach (Pawn pawn in pawns)
+                    {
+                        options.Add(new FloatMenuOption(pawn.Name.ToStringFull, () => { selectedPawn = pawn; }));
+                    }
+                    Find.WindowStack.Add(new FloatMenu(options));
+                }
+            }
+
+            listingStandard.Label("Select Work Type:"); 
+            if (listingStandard.ButtonText(!string.IsNullOrEmpty(selectedWorkType?.defName) ? selectedWorkType.defName : "No work type selected"))
+            {
+                List<FloatMenuOption> options = new List<FloatMenuOption>();
+                
+                foreach (WorkTypeDef workTypeDef in workTypeDefs)
+                {                     
+                    if (selectedPawn != null && selectedPawn.workSettings.WorkIsActive(workTypeDef))
+                    {
+                        options.Add(new FloatMenuOption(workTypeDef.defName, () => { selectedWorkType = workTypeDef; }));
+                    }
+                    else if (selectedPawn is null)
+                    {
+                        options.Add(new FloatMenuOption(workTypeDef.defName, () => { selectedWorkType = workTypeDef; }));
+                    }
+                }
+                Find.WindowStack.Add(new FloatMenu(options));
+            }
+
+            listingStandard.Label("Active Priority:");
+            DrawActivePriorityBox(listingStandard.GetRect(30));
+
+            listingStandard.Label("Inactive Priority:");            
+            DrawInactivePriorityBox(listingStandard.GetRect(30));
+
+
+            if (listingStandard.ButtonText("Save Set Point"))
             {
                 if (selectedPawn != null && selectedWorkType != null && selectedResource != null)
                 {
-                    newSetPoint = new SetPoint(triggerThreshold, disableThreshold, selectedPawn, selectedWorkType, activePriority, inactivePriority, selectedResource);
+                    newSetPoint.ActiveThreshold = activeThreshold;
+                    newSetPoint.InactiveThreshold = inactiveThreshold;
+                    newSetPoint.Pawn = selectedPawn;
+                    newSetPoint.WorkType = selectedWorkType;
+                    newSetPoint.ActivePriority = activePriority;
+                    newSetPoint.InactivePriority = inactivePriority;
+                    newSetPoint.Resource = selectedResource;
 
                     // Add the new SetPoint to the SetPointManager
                     SetPointManager.Instance.AddSetPoint(newSetPoint);
@@ -164,24 +196,10 @@ public class SetPointWindow : Window
                 }
                 else
                 {
-                    Messages.Message("SetPoint created: " + newSetPoint.WorkType.labelShort, MessageTypeDefOf.TaskCompletion, false);
+                    Messages.Message($"SetPoint Saved: {newSetPoint.Pawn.Name} {newSetPoint.WorkType.labelShort} {newSetPoint.Resource.defName}", MessageTypeDefOf.TaskCompletion, false);
                 }
             }
-
-            //if (listingStandard.ButtonText("Apply"))
-            //{
-            //    // Apply the settings and close the window
-            //    this.Close();
-
-            //    if (newSetPoint is null)
-            //    {
-            //        Messages.Message("SetPoint was null... nothing happened", MessageTypeDefOf.RejectInput);
-            //    }
-            //    else
-            //    {
-            //        Messages.Message("SetPoint created: " + newSetPoint.WorkType.labelShort, MessageTypeDefOf.TaskCompletion, false);
-            //    }
-            //}
+             
             listingStandard.End();
             
         }
@@ -190,6 +208,58 @@ public class SetPointWindow : Window
             Console.WriteLine(ex.Message, ex.StackTrace);
         }
     }
+
+
+    private int SliderWithTextField(string label, int currentValue, int minValue, int maxValue, float sliderWidth, float textFieldWidth, Listing_Standard listingStandard)
+    {
+        listingStandard.Label(label);
+
+        bool sliderChanged = false;
+        int newSliderValue;
+        string textFieldValue;
+
+        Rect sliderRect = listingStandard.GetRect(24f);
+        if (Event.current.type == EventType.MouseDown || Event.current.type == EventType.MouseDrag)
+        {
+            newSliderValue = (int)Mathf.Round(GUI.HorizontalSlider(sliderRect, currentValue, minValue, maxValue));
+            sliderChanged = true;
+        }
+        else
+        {
+            newSliderValue = currentValue;
+            GUI.HorizontalSlider(sliderRect, currentValue, minValue, maxValue);
+            sliderChanged = false;
+        }
+
+        listingStandard.Gap(listingStandard.verticalSpacing);
+
+        Rect textFieldRect = listingStandard.GetRect(24f);
+        textFieldValue = GUI.TextField(textFieldRect, currentValue.ToString());
+
+        if (int.TryParse(textFieldValue, out int parsedValue))
+        {
+            if (parsedValue != currentValue)
+            {
+                currentValue = Mathf.Clamp(parsedValue, minValue, maxValue);
+            }
+        }
+        else
+        {
+            textFieldValue = currentValue.ToString();
+        }
+
+        if (sliderChanged && newSliderValue != currentValue)
+        {
+            currentValue = newSliderValue;
+        }
+
+        listingStandard.Gap(listingStandard.verticalSpacing);
+
+        return currentValue;
+    }
+
+
+
 
     private void DrawActivePriorityBox(Rect rect)
     {

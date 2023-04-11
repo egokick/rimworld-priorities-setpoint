@@ -24,13 +24,13 @@ namespace SetPointPriorities
                 listingStandard.Begin(inRect);
 
                 // Add a button to open the SetPointWindow
-                if (listingStandard.ButtonText("Add new setpoint"))
+                if (listingStandard.ButtonText("Add Set Point"))
                 {
                     SetPointWindow window = new SetPointWindow();
                     Find.WindowStack.Add(window);
                 }
 
-                if (listingStandard.ButtonText("Edit SetPoints"))
+                if (listingStandard.ButtonText("View Set Points"))
                 {
                     Find.WindowStack.Add(new EditSetPointsWindow());
                 }

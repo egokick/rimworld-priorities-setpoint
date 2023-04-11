@@ -1,12 +1,12 @@
 ﻿using Mono.Cecil;
 using System;
+using System.Xml;
 using Verse;
 
 public class SetPoint : IExposable
-{
-
-    public int TriggerThreshold;
-    public int DisableThreshold;
+{ 
+    public int ActiveThreshold;
+    public int InactiveThreshold;
     public Pawn Pawn;
     public WorkTypeDef WorkType;
     public int ActivePriority;
@@ -16,10 +16,10 @@ public class SetPoint : IExposable
 
     public SetPoint() { }
 
-    public SetPoint(int triggerThreshold, int disableThreshold, Pawn pawn, WorkTypeDef workType, int activePriority, int inactivePriority, ThingDef resource)
-    {
-        TriggerThreshold = triggerThreshold;
-        DisableThreshold = disableThreshold;
+    public SetPoint(int activeThreshold, int inactiveThreshold, Pawn pawn, WorkTypeDef workType, int activePriority, int inactivePriority, ThingDef resource)
+    { 
+        ActiveThreshold = activeThreshold;
+        InactiveThreshold = inactiveThreshold;
         Pawn = pawn;
         WorkType = workType;
         ActivePriority = activePriority;
@@ -63,8 +63,8 @@ public class SetPoint : IExposable
 
     public void ExposeData()
     {
-        Scribe_Values.Look(ref TriggerThreshold, "triggerThreshold");
-        Scribe_Values.Look(ref DisableThreshold, "disableThreshold");
+        Scribe_Values.Look(ref ActiveThreshold, "triggerThreshold");
+        Scribe_Values.Look(ref InactiveThreshold, "disableThreshold");
         Scribe_References.Look(ref Pawn, "pawn");
         Scribe_Defs.Look(ref WorkType, "workType");
         Scribe_Values.Look(ref ActivePriority, "activePriority");

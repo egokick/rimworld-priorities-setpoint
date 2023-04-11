@@ -33,6 +33,10 @@ public class SetPointManager : IExposable
         try 
         {
             Log.Message("AddSetPoint: " + setPoint.WorkType);
+            if (ActiveSetPoints.Contains(setPoint))
+            {
+                ActiveSetPoints.Remove(setPoint);
+            }
             ActiveSetPoints.Add(setPoint);
         }
         catch (Exception ex)
@@ -66,14 +70,14 @@ public class SetPointManager : IExposable
                 Log.Message("UpdateSetPoints.resourceCount: " + resourceCount.ToString());
                 Log.Message("UpdateSetPoints.setPoint is null: " + (setPoint is null).ToString());
                 Log.Message("UpdateSetPoints.setPoint.Enabled: "  + setPoint.Enabled.ToString());
-                Log.Message("UpdateSetPoints.setPoint.TriggerThreshold: " + setPoint.TriggerThreshold.ToString());
+                Log.Message("UpdateSetPoints.setPoint.TriggerThreshold: " + setPoint.ActiveThreshold.ToString());
 
                 // Check if the setPoint should be activated or deactivated
-                if (!setPoint.Enabled && resourceCount <= setPoint.TriggerThreshold)
+                if (!setPoint.Enabled && resourceCount <= setPoint.ActiveThreshold)
                 {
                     setPoint.Activate();
                 }
-                else if (setPoint.Enabled && resourceCount >= setPoint.DisableThreshold)
+                else if (setPoint.Enabled && resourceCount >= setPoint.InactiveThreshold)
                 {
                     setPoint.Deactivate();
                 }
