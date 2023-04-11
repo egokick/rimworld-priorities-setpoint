@@ -4,7 +4,7 @@
     <defName>OpenSetPointDialog</defName>
     <label>Set Point Manager</label>
     <order>150</order>
-    <iconPath>UI/Buttons/SetPointManager</iconPath>
+    <buttonVisible>True</buttonVisible>
     <validWithoutMap>false</validWithoutMap>
     <workerClass>SetPointPriorities.SetPointMainButtonWorker</workerClass>
   </MainButtonDef>

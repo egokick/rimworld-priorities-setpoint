@@ -1,4 +1,5 @@
-﻿using RimWorld;
+﻿using Newtonsoft.Json;
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,6 +52,7 @@ public class SetPointWindow : Window
 
     public SetPointWindow()
     {
+        newSetPoint = new SetPoint();
         Setup();
     }
 
@@ -166,22 +168,54 @@ public class SetPointWindow : Window
 
             if (listingStandard.ButtonText("Save Set Point"))
             {
+                Log.Message("Save Set Point button clicked");
+
                 if (selectedPawn != null && selectedWorkType != null && selectedResource != null)
                 {
-                    newSetPoint.ActiveThreshold = activeThreshold;
-                    newSetPoint.InactiveThreshold = inactiveThreshold;
-                    newSetPoint.Pawn = selectedPawn;
-                    newSetPoint.WorkType = selectedWorkType;
-                    newSetPoint.ActivePriority = activePriority;
-                    newSetPoint.InactivePriority = inactivePriority;
-                    newSetPoint.Resource = selectedResource;
+                    Log.Message("selectedPawn != null && selectedWorkType != null && selectedResource != null");
+                                         
+                    try
+                    {
+                        if (newSetPoint is null)
+                        {
+                            Log.Message("newSetPoint is null");
 
-                    // Add the new SetPoint to the SetPointManager
-                    SetPointManager.Instance.AddSetPoint(newSetPoint);
+                            newSetPoint = new SetPoint();
+                        } 
+                         
+                        newSetPoint.ActiveThreshold = activeThreshold;
+                        Log.Message("newSetPoint ActiveThreshold: " + newSetPoint.ActiveThreshold);
 
-                    // Close the window
-                    this.Close();
+                        newSetPoint.InactiveThreshold = inactiveThreshold;
+                        Log.Message("newSetPoint InactiveThreshold: " + newSetPoint.InactiveThreshold);
 
+                        newSetPoint.Pawn = selectedPawn;
+                        Log.Message("newSetPoint Pawn: " + newSetPoint.Pawn);
+
+                        newSetPoint.WorkType = selectedWorkType;
+                        Log.Message("newSetPoint WorkType: " + newSetPoint.WorkType);
+
+                        newSetPoint.ActivePriority = activePriority;
+                        Log.Message("newSetPoint ActivePriority: " + newSetPoint.ActivePriority);
+
+                        newSetPoint.InactivePriority = inactivePriority;
+                        Log.Message("newSetPoint InactivePriority: " + newSetPoint.InactivePriority);
+
+                        newSetPoint.Resource = selectedResource;
+                        Log.Message("newSetPoint Resource: " + newSetPoint.Resource);
+
+                        // Add the new SetPoint to the SetPointManager
+                        Log.Message("about to add setpoint");
+                        SetPointManager.Instance.AddSetPoint(newSetPoint);
+
+                        // Close the window
+                        this.Close();
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex.ToString());
+                    } 
                 }
                 else
                 {
