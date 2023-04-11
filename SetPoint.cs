@@ -30,27 +30,23 @@ public class SetPoint : IExposable
 
     public void Activate()
     {
-        if (!Enabled)
-        {
-            UpdatePawnPriority(ActivePriority);
-            Enabled = true;
-        }
+      
+        UpdatePawnPriority(ActivePriority);
+        Enabled = true;
+         
     }
 
     public void Deactivate()
-    {
-        if (Enabled)
-        {
-            UpdatePawnPriority(InactivePriority);
-            Enabled = false;
-        }
+    { 
+        UpdatePawnPriority(InactivePriority);
+        Enabled = false; 
     }
 
     private void UpdatePawnPriority(int newPriority)
     {
         try
         {
-            if (Pawn != null && Pawn.workSettings != null)
+            if (Pawn != null && Pawn.workSettings != null )
             {
                 Pawn.workSettings.SetPriority(WorkType, newPriority);
             }

@@ -67,10 +67,9 @@ public class SetPointManager : IExposable
 
                 // Get the resource count in the pawn's map
                 int resourceCount = setPoint.Pawn.Map.resourceCounter.GetCount(setPoint.Resource);
-                Log.Message("UpdateSetPoints.resourceCount: " + resourceCount.ToString());
-                Log.Message("UpdateSetPoints.setPoint is null: " + (setPoint is null).ToString());
-                Log.Message("UpdateSetPoints.setPoint.Enabled: "  + setPoint.Enabled.ToString());
-                Log.Message("UpdateSetPoints.setPoint.TriggerThreshold: " + setPoint.ActiveThreshold.ToString());
+                //Log.Message("UpdateSetPoints.resourceCount: " + resourceCount.ToString()); 
+                //Log.Message("UpdateSetPoints.setPoint.Enabled: "  + setPoint.Enabled.ToString());
+                //Log.Message("UpdateSetPoints.setPoint.ActiveThreshold: " + setPoint.ActiveThreshold.ToString());
 
                 // Check if the setPoint should be activated or deactivated
                 if (resourceCount <= setPoint.ActiveThreshold)
