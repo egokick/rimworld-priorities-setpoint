@@ -73,11 +73,11 @@ public class SetPointManager : IExposable
                 Log.Message("UpdateSetPoints.setPoint.TriggerThreshold: " + setPoint.ActiveThreshold.ToString());
 
                 // Check if the setPoint should be activated or deactivated
-                if (!setPoint.Enabled && resourceCount <= setPoint.ActiveThreshold)
+                if (resourceCount <= setPoint.ActiveThreshold)
                 {
                     setPoint.Activate();
                 }
-                else if (setPoint.Enabled && resourceCount >= setPoint.InactiveThreshold)
+                else if (resourceCount >= setPoint.InactiveThreshold)
                 {
                     setPoint.Deactivate();
                 }
