@@ -4,6 +4,12 @@ This mod adds a user interface to RimWorld that allows you to define "set points
 
 ## How it works
 
+![Menu option](1menu-option.PNG)
+
+![Set Point Manager](2-set-point-manager.PNG)
+
+![Add Set Point](3-add-set-point.PNG)
+
 You can create set points that are activated when certain conditions are met, such as when the number of cooked meals drops below a specified threshold, and deactivated when another condition is met, like when the number of cooked meals rises above another threshold.
 
 When a set point is activated, it will change the selected priority of a RimWorld character. For example, it could set the cooking priority to 1 (highest priority). When the set point is deactivated, it will revert the priority of the RimWorld character back to a previously selected value, such as setting the cooking priority back to 3 (medium priority).
